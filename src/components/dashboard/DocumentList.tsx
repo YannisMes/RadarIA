@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import {
+  AlertTriangle,
+  CheckCircle2,
   FileText,
   Loader2,
   ScrollText,
@@ -138,16 +140,35 @@ function DocumentRowItem({
     });
   };
 
+  const hasExtractedText =
+    typeof doc.extracted_text === "string" && doc.extracted_text.length > 50;
+
   return (
     <li className="flex items-center justify-between gap-3 py-2.5">
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-slate-900">
           {doc.file_name}
         </p>
-        <p className="text-xs text-slate-500">
-          {formatFileSize(doc.file_size ?? 0)} ·{" "}
-          {doc.file_type?.includes("pdf") ? "PDF" : "TXT"}
-        </p>
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+          <span>{formatFileSize(doc.file_size ?? 0)}</span>
+          <span aria-hidden="true">·</span>
+          <span>{doc.file_type?.includes("pdf") ? "PDF" : "TXT"}</span>
+          <span aria-hidden="true">·</span>
+          {hasExtractedText ? (
+            <span className="inline-flex items-center gap-1 text-success-700">
+              <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+              Texte extrait
+            </span>
+          ) : (
+            <span
+              className="inline-flex items-center gap-1 text-urgent-600"
+              title="L'analyse pourra rester partielle pour ce document."
+            >
+              <AlertTriangle className="h-3 w-3" aria-hidden="true" />
+              Texte non extrait
+            </span>
+          )}
+        </div>
         {error && (
           <p className="mt-1 text-xs text-danger-600">{error}</p>
         )}

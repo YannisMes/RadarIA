@@ -24,6 +24,7 @@ import {
 } from "@/lib/documents";
 import { getQuotaSnapshot } from "@/lib/quota";
 import { DOCUMENT_CATEGORIES } from "@/lib/constants";
+import { extractTextFromBuffer } from "@/lib/extract";
 
 // -----------------------------------------------------
 // Schémas
@@ -132,6 +133,13 @@ export async function uploadDocumentAction(
     return { error: "L'upload du fichier a échoué. Réessaie." };
   }
 
+  // Extraction texte (best-effort : ne fait pas échouer l'upload)
+  const extracted = await extractTextFromBuffer(
+    Buffer.from(arrayBuffer),
+    contentType,
+    file.name,
+  );
+
   // Insertion DB (cast as never : limitation Postgrest v17)
   const insertPayload = {
     project_id: projectId,
@@ -141,6 +149,7 @@ export async function uploadDocumentAction(
     file_size: file.size,
     document_category: category,
     storage_path: storagePath,
+    extracted_text: extracted.hasContent ? extracted.text : null,
   };
 
   const { error: insertError } = await supabase
@@ -171,9 +180,19 @@ export async function uploadDocumentAction(
   const label =
     DOCUMENT_CATEGORIES.find((c) => c.value === category)?.label ?? "Document";
 
+  let suffix = "";
+  if (extracted.hasContent) {
+    suffix =
+      extracted.pages > 0
+        ? ` · ${extracted.pages} page${extracted.pages > 1 ? "s" : ""} extraites`
+        : " · texte extrait";
+  } else if (extracted.error) {
+    suffix = " · texte non extrait (l'analyse pourra rester partielle)";
+  }
+
   return {
     error: null,
-    success: `${label} ajouté (${counts.total} fichier${counts.total > 1 ? "s" : ""} au total).`,
+    success: `${label} ajouté (${counts.total} fichier${counts.total > 1 ? "s" : ""} au total)${suffix}.`,
   };
 }
 
