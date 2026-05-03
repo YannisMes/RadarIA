@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Lock, Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { displayName } from "@/lib/profile";
@@ -9,6 +10,7 @@ import { Container } from "@/components/ui/Container";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { UpgradeBanner } from "@/components/dashboard/UpgradeBanner";
+import { CheckoutResultBanner } from "@/components/dashboard/CheckoutResultBanner";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -28,6 +30,10 @@ export default async function DashboardPage() {
 
   return (
     <Container>
+      <Suspense fallback={null}>
+        <CheckoutResultBanner />
+      </Suspense>
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>

@@ -45,7 +45,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={inter.variable}>
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <body className="min-h-screen font-sans antialiased">
+        <a href="#main-content" className="skip-link">
+          Aller au contenu principal
+        </a>
+        <div id="main-content">{children}</div>
+      </body>
     </html>
   );
 }
