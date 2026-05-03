@@ -1,13 +1,15 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Plus } from "lucide-react";
+import { Lock, Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth";
-import { getUserContext, displayName } from "@/lib/profile";
+import { displayName } from "@/lib/profile";
 import { listUserProjects } from "@/lib/projects";
+import { getQuotaSnapshot } from "@/lib/quota";
 import { Container } from "@/components/ui/Container";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { UpgradeBanner } from "@/components/dashboard/UpgradeBanner";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -16,12 +18,13 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await requireUser("/dashboard");
-  const [ctx, projects] = await Promise.all([
-    getUserContext(user.id),
+  const [projects, snapshot] = await Promise.all([
     listUserProjects(user.id),
+    getQuotaSnapshot(user.id),
   ]);
 
-  const firstName = displayName(ctx.profile, user.email);
+  const firstName = displayName(null, user.email);
+  const quotaReached = snapshot.projectsCount >= snapshot.limits.maxProjects;
 
   return (
     <Container>
@@ -36,21 +39,15 @@ export default async function DashboardPage() {
             Reprends une révision en cours ou démarre une nouvelle analyse.
           </p>
         </div>
-        <Link
-          href="/dashboard/new"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-brand-700"
-        >
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          Nouvelle analyse
-        </Link>
+        <NewProjectButton disabled={quotaReached} />
       </div>
 
       {/* Bandeau upgrade pour les utilisateurs gratuits avec au moins 1 projet */}
-      {!ctx.isPremium && projects.length > 0 && (
+      {!snapshot.isPremium && projects.length > 0 && (
         <div className="mt-6">
           <UpgradeBanner
-            projectsUsed={projects.length}
-            projectsMax={ctx.limits.maxProjects}
+            projectsUsed={snapshot.projectsCount}
+            projectsMax={snapshot.limits.maxProjects}
           />
         </div>
       )}
@@ -77,5 +74,28 @@ export default async function DashboardPage() {
         )}
       </section>
     </Container>
+  );
+}
+
+function NewProjectButton({ disabled }: { disabled: boolean }) {
+  if (disabled) {
+    return (
+      <div className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-5 py-2.5 text-sm font-semibold text-slate-500">
+        <Lock className="h-4 w-4" aria-hidden="true" />
+        Limite atteinte
+      </div>
+    );
+  }
+  return (
+    <Link
+      href="/dashboard/new"
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold shadow-soft transition-colors",
+        "bg-brand-600 text-white hover:bg-brand-700",
+      )}
+    >
+      <Plus className="h-4 w-4" aria-hidden="true" />
+      Nouvelle analyse
+    </Link>
   );
 }

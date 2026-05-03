@@ -7,6 +7,8 @@ import {
   EXAM_TYPES,
   CURRENT_LEVELS,
   DOCUMENT_CATEGORIES,
+  TARGET_GRADES,
+  AVAILABLE_TIMES,
 } from "@/lib/constants";
 import type { ProjectStatus } from "@/types/database";
 
@@ -20,6 +22,8 @@ const studyLevelLabels = buildLookup(STUDY_LEVELS);
 const examTypeLabels = buildLookup(EXAM_TYPES);
 const currentLevelLabels = buildLookup(CURRENT_LEVELS);
 const documentCategoryLabels = buildLookup(DOCUMENT_CATEGORIES);
+const targetGradeLabels = buildLookup(TARGET_GRADES);
+const availableTimeLabels = buildLookup(AVAILABLE_TIMES);
 
 export function studyLevelLabel(value?: string | null): string {
   if (!value) return "—";
@@ -36,6 +40,14 @@ export function currentLevelLabel(value?: string | null): string {
 export function documentCategoryLabel(value?: string | null): string {
   if (!value) return "—";
   return documentCategoryLabels[value] ?? value;
+}
+export function targetGradeLabel(value?: string | null): string {
+  if (!value) return "—";
+  return targetGradeLabels[value] ?? value;
+}
+export function availableTimeLabel(value?: string | null): string {
+  if (!value) return "—";
+  return availableTimeLabels[value] ?? value;
 }
 
 // -----------------------------------------------------

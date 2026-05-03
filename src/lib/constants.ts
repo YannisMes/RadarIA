@@ -40,10 +40,27 @@ export const DOCUMENT_CATEGORIES = [
   { value: "syllabus", label: "Syllabus" },
 ] as const;
 
+export const TARGET_GRADES = [
+  { value: "passer", label: "Passer (≥ 10/20)" },
+  { value: "bien", label: "Bien (12-13/20)" },
+  { value: "tres_bien", label: "Très bien (14-15/20)" },
+  { value: "mention", label: "Mention (16+/20)" },
+] as const;
+
+export const AVAILABLE_TIMES = [
+  { value: "30min", label: "Moins de 1 h" },
+  { value: "1h", label: "Environ 1 h" },
+  { value: "2h", label: "Environ 2 h" },
+  { value: "3h", label: "Environ 3 h" },
+  { value: "4h_plus", label: "4 h ou plus" },
+] as const;
+
 export type StudyLevel = (typeof STUDY_LEVELS)[number]["value"];
 export type ExamType = (typeof EXAM_TYPES)[number]["value"];
 export type CurrentLevel = (typeof CURRENT_LEVELS)[number]["value"];
 export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number]["value"];
+export type TargetGrade = (typeof TARGET_GRADES)[number]["value"];
+export type AvailableTime = (typeof AVAILABLE_TIMES)[number]["value"];
 
 // -----------------------------------------------------
 // Limites freemium
