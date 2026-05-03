@@ -1,16 +1,20 @@
 import { Check, Sparkles } from "lucide-react";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { CheckoutButton } from "@/components/marketing/CheckoutButton";
 import { cn } from "@/lib/utils";
 
+type PaidPlanId = "pack" | "premium";
+
 interface Plan {
-  id: string;
+  id: "free" | PaidPlanId;
   name: string;
   price: string;
   period?: string;
   description: string;
   cta: string;
-  ctaHref: string;
+  /** Soit un href (plan gratuit / fallback), soit déclenche Stripe via plan id. */
+  ctaHref?: string;
   ctaVariant: "primary" | "secondary" | "outline";
   features: string[];
   notIncluded?: string[];
@@ -46,7 +50,6 @@ const plans: Plan[] = [
     period: "paiement unique",
     description: "Pour préparer un examen précis sans abonnement.",
     cta: "Choisir le pack",
-    ctaHref: "/signup?plan=pack",
     ctaVariant: "outline",
     badge: "À l'unité",
     features: [
@@ -65,7 +68,6 @@ const plans: Plan[] = [
     period: "/ mois",
     description: "Pour réviser plusieurs matières toute l'année.",
     cta: "Passer Premium",
-    ctaHref: "/signup?plan=premium",
     ctaVariant: "primary",
     highlighted: true,
     badge: "Le plus populaire",
@@ -135,14 +137,25 @@ export function PricingSection() {
               </div>
             </div>
 
-            <Button
-              href={plan.ctaHref}
-              variant={plan.ctaVariant}
-              size="md"
-              className="mt-6 w-full"
-            >
-              {plan.cta}
-            </Button>
+            <div className="mt-6">
+              {plan.id === "free" ? (
+                <Button
+                  href={plan.ctaHref ?? "/signup"}
+                  variant={plan.ctaVariant}
+                  size="md"
+                  className="w-full"
+                >
+                  {plan.cta}
+                </Button>
+              ) : (
+                <CheckoutButton
+                  plan={plan.id}
+                  variant={plan.ctaVariant === "secondary" ? "secondary" : plan.ctaVariant}
+                >
+                  {plan.cta}
+                </CheckoutButton>
+              )}
+            </div>
 
             <ul className="mt-6 space-y-3 text-sm">
               {plan.features.map((feature) => (
