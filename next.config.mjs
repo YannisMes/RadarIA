@@ -2,7 +2,8 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: "10mb",
+      // Aligné sur la taille max du bucket Storage `documents` (20 MB).
+      bodySizeLimit: "25mb",
     },
   },
   images: {
