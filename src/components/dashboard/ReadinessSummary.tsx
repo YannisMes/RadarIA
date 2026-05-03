@@ -84,7 +84,7 @@ export function ReadinessSummary({
           </Link>
           {limitReached && !isPremium && (
             <Link
-              href="/#pricing"
+              href="/pricing"
               className="inline-flex items-center justify-center gap-1 text-xs font-medium text-brand-700 hover:text-brand-800"
             >
               <Lock className="h-3 w-3" aria-hidden="true" />

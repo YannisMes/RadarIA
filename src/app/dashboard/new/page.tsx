@@ -84,7 +84,7 @@ function QuotaReached({
         </Link>
         {!isPremium && (
           <Link
-            href="/#pricing"
+            href="/pricing"
             className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:bg-brand-700"
           >
             Voir les plans Premium

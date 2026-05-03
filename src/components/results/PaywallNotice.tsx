@@ -12,7 +12,7 @@ export function PaywallNotice({
   title = "Contenu Premium",
   description = "Passe Premium ou prends le Pack Examen pour débloquer l'intégralité de l'analyse.",
   cta = "Voir les plans",
-  href = "/#pricing",
+  href = "/pricing",
 }: PaywallNoticeProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-dashed border-brand-200 bg-gradient-to-br from-brand-50/60 to-accent-50/60 p-6 text-center sm:p-8">
