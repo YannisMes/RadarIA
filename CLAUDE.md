@@ -15,36 +15,59 @@
 | Style | Tailwind CSS |
 | Auth & DB | Supabase (Auth + Postgres + Storage + RLS) |
 | IA | Gemini API (provider principal) — abstraction `AIProvider` pour brancher OpenAI/Claude plus tard |
-| Paiements | Stripe (préparé, V2) |
+| Paiements | Stripe |
 | Déploiement | Vercel |
 
 ## Structure de dossiers
 
 ```
 src/
-├── app/                    # Routes Next.js (App Router)
-│   ├── (marketing)/        # Landing, pricing, FAQ (publiques)
-│   ├── (auth)/             # /login, /signup, /forgot-password
-│   ├── dashboard/          # Espace connecté
-│   └── api/                # Route handlers (analyse, stripe, etc.)
+├── app/                              # Routes Next.js (App Router)
+│   ├── (marketing)/                  # Landing, pricing, FAQ, légal (publiques)
+│   │   ├── pricing/
+│   │   └── legal/{conditions,confidentialite,mentions}/
+│   ├── (auth)/                       # /login, /signup, /forgot-password
+│   ├── auth/                         # /auth/{callback,reset-password,signout}
+│   ├── dashboard/                    # Espace connecté
+│   │   ├── new/
+│   │   └── projects/[id]/{upload,analyze,results}/
+│   ├── api/                          # Route handlers
+│   │   ├── projects/[id]/analyze/
+│   │   └── stripe/{create-checkout-session,webhook}/
+│   ├── error.tsx                     # Error boundary
+│   ├── not-found.tsx                 # 404
+│   ├── opengraph-image.tsx           # OG dynamique
+│   ├── sitemap.ts
+│   └── robots.ts
 ├── components/
-│   ├── marketing/          # Hero, Features, Pricing…
-│   ├── dashboard/          # ProjectCard, UploadDropzone…
-│   ├── results/            # Onglets de résultats
-│   └── ui/                 # Boutons, inputs, modales (génériques)
+│   ├── marketing/                    # Hero, Features, Pricing, BillingComparison…
+│   ├── dashboard/                    # ProjectCard, UploadCard, ReadinessSummary…
+│   ├── results/                      # OverviewTab, PriorityChaptersTab, …
+│   ├── auth/                         # AuthCard
+│   └── ui/                           # Boutons, inputs, modales (génériques)
 ├── lib/
-│   ├── ai/                 # Provider Gemini, prompts, schémas Zod
-│   │   ├── providers/
-│   │   ├── prompts/
+│   ├── ai/                           # Provider Gemini, prompts, schémas Zod
+│   │   ├── providers/gemini.ts
+│   │   ├── prompts/exam-analysis.ts
 │   │   ├── types.ts
 │   │   ├── schema.ts
 │   │   └── analyze-project.ts
-│   ├── supabase/           # Clients (browser, server, admin)
+│   ├── supabase/                     # Clients (browser, server, admin, middleware)
 │   ├── stripe.ts
 │   ├── env.ts
 │   ├── constants.ts
+│   ├── labels.ts
+│   ├── auth.ts
+│   ├── profile.ts
+│   ├── projects.ts
+│   ├── documents.ts
+│   ├── analyses.ts
+│   ├── extract.ts
+│   ├── quota.ts
+│   ├── storage.ts
 │   └── utils.ts
-└── types/                  # Types DB, types métier
+├── types/                            # Types DB (database.ts), types métier
+└── middleware.ts                     # Auth middleware Supabase
 ```
 
 ## Règles non négociables
@@ -68,21 +91,23 @@ npm run typecheck   # tsc --noEmit
 
 Voir `.env.example` pour la liste complète. Copier en `.env.local`.
 
+## Déploiement
+
+Voir `DEPLOYMENT.md` pour la checklist Vercel + Supabase + Stripe complète.
+
 ## État d'avancement
 
-Suivre le plan d'origine :
-
 1. ✅ Étape 1 — Init projet, stack, architecture
-2. ⬜ Étape 2 — Landing page complète
-3. ⬜ Étape 3 — Supabase (migrations, RLS, clients)
-4. ⬜ Étape 4 — Authentification
-5. ⬜ Étape 5 — Dashboard
-6. ⬜ Étape 6 — Création projet
-7. ⬜ Étape 7 — Upload documents
-8. ⬜ Étape 8 — Extraction texte
-9. ⬜ Étape 9 — Gemini + analyse IA
-10. ⬜ Étape 10 — Page résultats
-11. ⬜ Étape 11 — Freemium + pricing
-12. ⬜ Étape 12 — Stripe
-13. ⬜ Étape 13 — Finitions UX
-14. ⬜ Étape 14 — Checklist Vercel
+2. ✅ Étape 2 — Landing page complète
+3. ✅ Étape 3 — Supabase (migrations, RLS, clients)
+4. ✅ Étape 4 — Authentification
+5. ✅ Étape 5 — Dashboard
+6. ✅ Étape 6 — Création projet
+7. ✅ Étape 7 — Upload documents
+8. ✅ Étape 8 — Extraction texte
+9. ✅ Étape 9 — Gemini + analyse IA
+10. ✅ Étape 10 — Page résultats
+11. ✅ Étape 11 — Freemium + pricing
+12. ✅ Étape 12 — Stripe
+13. ✅ Étape 13 — Finitions UX
+14. ✅ Étape 14 — Checklist Vercel
