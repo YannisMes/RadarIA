@@ -7,10 +7,8 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import {
-  requestResetAction,
-  initialAuthState,
-} from "@/app/(auth)/actions";
+import { requestResetAction } from "@/app/(auth)/actions";
+import { initialAuthState } from "@/app/(auth)/types";
 
 export function ForgotPasswordForm() {
   const [state, formAction] = useFormState(

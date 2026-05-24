@@ -7,10 +7,8 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import {
-  signupAction,
-  initialAuthState,
-} from "@/app/(auth)/actions";
+import { signupAction } from "@/app/(auth)/actions";
+import { initialAuthState } from "@/app/(auth)/types";
 
 export function SignupForm() {
   const [state, formAction] = useFormState(signupAction, initialAuthState);

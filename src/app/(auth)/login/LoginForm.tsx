@@ -7,10 +7,8 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import {
-  loginAction,
-  initialAuthState,
-} from "@/app/(auth)/actions";
+import { loginAction } from "@/app/(auth)/actions";
+import { initialAuthState } from "@/app/(auth)/types";
 
 interface LoginFormProps {
   redirectTo?: string;

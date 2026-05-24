@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { publicEnv } from "@/lib/env";
+import type { AuthActionState } from "./types";
 
 // -----------------------------------------------------
 // Schémas
@@ -58,9 +59,7 @@ function pickField(form: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
-type ActionState = { error: string | null; success?: string | null };
-
-const initial: ActionState = { error: null };
+type ActionState = AuthActionState;
 
 /**
  * Traduit une erreur Supabase brute en message FR convivial.
@@ -229,5 +228,3 @@ export async function signOutAction() {
   redirect("/");
 }
 
-export { initial as initialAuthState };
-export type { ActionState as AuthActionState };

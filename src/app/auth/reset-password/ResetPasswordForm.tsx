@@ -9,10 +9,8 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import {
-  updatePasswordAction,
-  initialAuthState,
-} from "@/app/(auth)/actions";
+import { updatePasswordAction } from "@/app/(auth)/actions";
+import { initialAuthState } from "@/app/(auth)/types";
 
 export function ResetPasswordForm() {
   const [state, formAction] = useFormState(
